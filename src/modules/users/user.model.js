@@ -46,6 +46,12 @@ const UserSchema = new Schema({
     trim: true,
     minlength: [6, 'Password need to be longer'],
   },
+  facebook: {
+    id: String,
+    token: String,
+    email: String,
+    name: String, 
+  },
   favourites: {
     articles: [
       {
