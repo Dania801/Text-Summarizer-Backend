@@ -109,6 +109,7 @@ UserSchema.methods = {
       _id: this._id,
       userName: this.userName,
       photo: this.photo,
+      twitter: this.twitter,
       token: `JWT ${this.createToken()}`,
     };
   },

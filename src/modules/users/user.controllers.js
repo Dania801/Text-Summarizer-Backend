@@ -13,10 +13,37 @@ export async function signup(req, res) {
   }
 }
 
+function upsertUser(profile, res){
+    return User
+      .findOne({'twitter.id': profile.id }, (err, user) => {
+      if (!user) {
+        const twitterInfo = {
+          id: profile.id,
+          fullName: profile.displayName,
+          screenName: profile.username,
+        };
+
+        var newUser = new User({
+          userName: twitterInfo.screenName,
+          photo: profile.photos[0].value,
+          twitter: twitterInfo
+        });
+
+        newUser.save( (error, savedUser) => {
+          if (error) {
+            return res.status(HTTPStatus.BAD_REQUEST)
+          }
+          return res.status(HTTPStatus.OK).json(savedUser.toAuthJSON());
+        });
+      } else {
+        return res.status(HTTPStatus.OK).json(user.toAuthJSON());
+      }
+    });
+}
+
 export async function twitterSignup(req, res) {
   try {
-    console.log(req.user.id)
-    res.redirect('/')
+    upsertUser(req.user, res);
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }

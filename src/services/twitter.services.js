@@ -11,42 +11,11 @@ const twitterOpts = {
 
 const twitterStrategy = new TwitterStrategy(twitterOpts, async (accessToken, refreshToken, profile, done) => {
   try {
-    upsertUser(accessToken, refreshToken, profile, (err, user)=>{
-      return done(err, user)
-    });
+    return done(null, profile);
   } catch (err) {
     return done(err, false);
   }
 });
-
-function upsertUser(token, tokenSecret, profile, done){
-  console.log(profile)
-    return User
-      .findOne({'twitter.id': profile.id }, (err, user) => {
-      if (!user) {
-        const twitterInfo = {
-          id: profile.id,
-          fullName: profile.displayName,
-          screenName: profile.username,
-        };
-
-        var newUser = new User({
-          userName: profile.userName,
-          photo: profile.photos[0].value,
-          twitter: twitterInfo
-        });
-
-        newUser.save( (error, savedUser) => {
-          if (error) {
-            console.log(error);
-          }
-          return done(error, savedUser);
-        });
-      } else {
-        return done(err, user);
-      }
-    });
-}
 
 passport.use(twitterStrategy);
 
