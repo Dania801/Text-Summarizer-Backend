@@ -13,6 +13,15 @@ export async function signup(req, res) {
   }
 }
 
+export async function twitterSignup(req, res) {
+  try {
+    console.log(req.user.id)
+    res.redirect('/')
+  } catch (e) {
+    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+  }
+}
+
 export function login(req, res, next) {
   try {
     const user = req.user.toAuthJSON();

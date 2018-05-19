@@ -18,9 +18,6 @@ routes.post('/login', authLocal, userController.login);
 routes.post('/:id/follow', authJwt ,userController.follow);
 routes.patch('/update', authJwt, Multer({storage: Multer.memoryStorage()}).single("photo"), userController.update);
 routes.get('/login/twitter', authTwitter);
-routes.get('/auth/twitter/callback', authTwitterCallback, (req, res) => {
-  console.log('Hello there')
-})
-
+routes.get('/auth/twitter/callback', authTwitterCallback, userController.twitterSignup);
 
 export default routes;

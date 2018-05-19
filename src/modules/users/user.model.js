@@ -11,7 +11,6 @@ const UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
     trim: true,
     validate: {
       validator(email) {
@@ -22,12 +21,10 @@ const UserSchema = new Schema({
   },
   firstName: {
     type: String,
-    required: [true, 'First name is required'],
     trim: true,
   },
   lastName: {
     type: String,
-    required: [true, 'Last name is required'],
     trim: true,
   },
   userName: {
@@ -42,15 +39,13 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     trim: true,
     minlength: [6, 'Password need to be longer'],
   },
-  facebook: {
+  twitter: {
     id: String,
-    token: String,
-    email: String,
-    name: String, 
+    fullName: String,
+    screenName: String,
   },
   favourites: {
     articles: [
