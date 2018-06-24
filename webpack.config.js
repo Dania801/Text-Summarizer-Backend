@@ -7,6 +7,7 @@ module.exports = {
   externals: [nodeExternals()],
   entry: {
     index: './src/index.js',
+    test: './test/appTest.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
