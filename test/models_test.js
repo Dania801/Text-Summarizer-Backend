@@ -1,10 +1,14 @@
+
 let sinon = require('sinon');
 let chai = require('chai');
 let mongoose = require('mongoose');
 let assert = require('assert');
 let expect = chai.expect;
+var request = require('supertest')('http://localhost:3000/api/v1/users');
+let app = require('../src/index');
 
 import User from '../src/modules/users/user.model';
+
 
 before('Connecting to DB', function(done) {
   mongoose.connect('mongodb://localhost:27017/supreme-posts-test');
@@ -23,7 +27,7 @@ describe('Testing User Model', function() {
 
   let user;
 
-  it('Creates a new user to test it', function(done) {
+  before('Creates a new user to test it', function(done) {
     user = new User({
       firstName: 'Dania',
       lastName: 'Refaie',
@@ -143,4 +147,73 @@ describe('Testing User Model', function() {
     });
     done();
   });
+});
+
+
+describe.only('Testing User routes', function() {
+
+  let user1;
+  let user2;
+  let token1;
+  let id2;
+  let cookies;
+
+  it('should create new user', (done) => {
+    user1 = {
+      email: 'owaysx123@gmail.com',
+      password: 'HelloWorld123',
+      firstName: 'Oways',
+      lastName: 'Refaie',
+      userName: 'Ozyx'
+    }
+    request
+      .post('/signup')
+      .send(user1)
+      .end(function (err, res) {
+        token1 = res.body.token;
+        expect(201);
+        done();
+      });
+  });
+
+  it('should login', (done) => {
+    request
+      .post('/login')
+      .send({ email: 'owaysx123@gmail.com', password: 'HelloWorld123'})
+      .query(token1)
+      .expect(201)
+      .end((err, res) => {
+        console.log(res.body);
+        done();
+      });
+  });
+
+  it('should create new user2', (done) => {
+    user2 = {
+      firstName: 'Daniax',
+      lastName: 'Refaie',
+      email: 'test1234x@gmail.com',
+      password: 'Helloworld123',
+      userName: 'Danix'
+    }
+    request
+      .post('/signup')
+      .send(user2)
+      .end(function (err, res) {
+        id2 = res.body._id;
+        expect(201);
+        done();
+      });
+  });
+
+  it('user1 should follow user2', (done) => {
+    request
+      .post(`/${id2}/follow`)
+      .set({ authorization: token1 })
+      .expect(200)
+      .end((err, res) => {
+        done();
+      });
+  });
+
 });
