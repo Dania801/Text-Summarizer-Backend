@@ -123,14 +123,14 @@ UserSchema.methods = {
     };
   },
   savePhoto(photo){
-     minioClient.putObject('europetrip', photo.originalname, photo.buffer, "application/octet-stream", function(error, etag) {
+     minioClient.putObject('mybucket', photo.originalname, photo.buffer, "application/octet-stream", function(error, etag) {
         if(error) {
             return console.log(error);
         }
-        console.log('File uploaded successfully.')
+        console.log('File uploaded successfully.');
     });
-    this.photo = photo.originalname
-    this.save()
+    this.photo = photo.originalname;
+    this.save();
   },
   _favourites: {
     async articles(articleId) {

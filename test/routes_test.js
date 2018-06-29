@@ -10,7 +10,7 @@ let app = require('../src/index');
 import User from '../src/modules/users/user.model';
 
 export function testRoutes() {
-  describe.only('Testing User routes', function() {
+  describe('Testing User routes', function() {
     let user1;
     let user2;
     let token1;
@@ -76,6 +76,10 @@ export function testRoutes() {
         .end((err, res) => {
           done();
         });
+    });
+
+    it('should update user info', (done) => {
+      done();
     });
 
   });

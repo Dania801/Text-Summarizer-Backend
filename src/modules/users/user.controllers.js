@@ -55,7 +55,7 @@ export function login(req, res, next) {
     if (user.photo){
       var size = 0
       var data = ""
-      minioClient.getObject('europetrip', user.photo, (err, dataStream) => {
+      minioClient.getObject('mybucket', user.photo, (err, dataStream) => {
         if (err) {
           return console.log(err)
         }
@@ -82,6 +82,9 @@ export function login(req, res, next) {
 export async function follow(req, res) {
   try {
     const user = await User.findById(req.user._id);
+    if(req.user._id.equals(req.params.id)){
+      return res.sendStatus(HTTPStatus.BAD_REQUEST);
+    }
     await user._followings.add(req.params.id);
     await User.checkFollower(req.params.id, req.user.id)
     return res.sendStatus(HTTPStatus.OK);
