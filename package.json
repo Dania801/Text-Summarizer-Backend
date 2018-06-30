@@ -9,7 +9,7 @@
     "clean": "rimraf dist",
     "dev:build": "yarn run clean && webpack -w",
     "dev": "cross-env NODE_ENV=development nodemon --trace-warnings dist/index.bundle.js",
-    "test": "nyc mocha dist/test.bundle.js --timeout=3000 --exit"
+    "test": "nyc mocha dist/test.bundle.js --timeout=7000 --exit"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",

@@ -99,9 +99,11 @@ export async function update(req, res) {
     Object.keys(req.body).forEach(key => {
       user[key] = req.body[key];
     });
-    if (req.file)
+    if (req.file){
       //TODO make sure that the original file name is unique
       await user.savePhoto(req.file);
+      return res.status(HTTPStatus.OK).json(user);
+    }
     return res.status(HTTPStatus.OK).json(await user.save());
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);

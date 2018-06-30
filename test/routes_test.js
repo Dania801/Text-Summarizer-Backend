@@ -40,6 +40,14 @@ export function testRoutes() {
         .send(fakeUser)
         .end(function (err, res) {
           token1 = res.body.token;
+          expect(res.body._id).to.not.be.undefined;
+          expect(res.body.userName).to.not.be.undefined;
+          expect(res.body.token).to.not.be.undefined;
+          expect(res.body._id).to.be.a('string');
+          expect(res.body.userName).to.be.a('string');
+          expect(res.body.token).to.be.a('string');
+          expect(res.statusCode).to.be.eq(201);
+          expect(err).to.be.null;
           expect(201);
           done();
         });
@@ -50,9 +58,17 @@ export function testRoutes() {
         .post('/login')
         .send({ email: fakeUser.email, password: fakeUser.password})
         .query(token1)
-        .expect(201)
+        .expect(200)
         .end((err, res) => {
-          console.log(res.body);
+          expect(res.body._id).to.not.be.undefined;
+          expect(res.body.userName).to.not.be.undefined;
+          expect(res.body.token).to.not.be.undefined;
+          expect(res.body._id).to.be.a('string');
+          expect(res.body.userName).to.be.a('string');
+          expect(res.body.token).to.be.a('string');
+          expect(res.statusCode).to.be.eq(200);
+          expect(err).to.be.null;
+          expect(200);
           done();
         });
     });
@@ -64,6 +80,15 @@ export function testRoutes() {
         .end(function (err, res) {
           id2 = res.body._id;
           expect(201);
+          expect(res.body._id).to.not.be.undefined;
+          expect(res.body.userName).to.not.be.undefined;
+          expect(res.body.token).to.not.be.undefined;
+          expect(res.body._id).to.be.a('string');
+          expect(res.body.userName).to.be.a('string');
+          expect(res.body.token).to.be.a('string');
+          expect(res.statusCode).to.be.eq(201);
+          expect(err).to.be.null;
+          expect(201);
           done();
         });
     });
@@ -74,13 +99,82 @@ export function testRoutes() {
         .set({ authorization: token1 })
         .expect(200)
         .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.body).to.be.an('object');
           done();
         });
     });
 
-    it('should update user info', (done) => {
-      done();
-    });
+    it('should update user photo', (done) => {
+      request
+        .patch('/update')
+        .set({ authorization: token1 })
+        .attach('photo', '/home/dania/Octave/cartoon.jpeg')
+        .expect(200)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.body).to.be.an('object');
+          done();
+        })
+      });
 
+      it('should change user\'s last name', (done) => {
+        request
+          .patch('/update')
+          .set({ authorization: token1 })
+          .send({ lastName: 'XXX' })
+          .expect(200)
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.body).to.be.an('object');
+            done();
+          })
+        });
+
+        it('should change user\'s password', (done) => {
+          request
+            .patch('/update')
+            .set({ authorization: token1 })
+            .send({ password: 'newpass' })
+            .expect(200)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.body).to.be.an('object');
+              done();
+            });
+        });
+
+        it('try login with old password', (done) => {
+          request
+            .post('/login')
+            .send({ email: fakeUser.email, password: fakeUser.password })
+            .query(token1)
+            .expect(401)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.body).to.be.an('object');
+              done();
+            });
+        });
+
+        it('should login with the new password', (done) => {
+          request
+            .post('/login')
+            .send({ email: fakeUser.email, password: 'newpass'})
+            .query(token1)
+            .expect(200)
+            .end((err, res) => {
+              expect(res.body._id).to.not.be.undefined;
+              expect(res.body.userName).to.not.be.undefined;
+              expect(res.body.token).to.not.be.undefined;
+              expect(res.body._id).to.be.a('string');
+              expect(res.body.userName).to.be.a('string');
+              expect(res.body.token).to.be.a('string');
+              expect(res.statusCode).to.be.eq(200);
+              expect(err).to.be.null;
+              expect(200);
+              done();
+            });
+        });
   });
 }
