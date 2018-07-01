@@ -6,8 +6,6 @@ let expect = chai.expect;
 let faker = require('faker');
 var request = require('supertest')('http://localhost:3000/api/v1/users');
 let app = require('../src/index');
-let models = require('./models_test.js');
-let routes = require('./routes_test.js');
 
 import User from '../src/modules/users/user.model';
 
